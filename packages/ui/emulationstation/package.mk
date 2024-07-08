@@ -3,7 +3,7 @@
 # Copyright (C) 2023 JELOS (https://github.com/JustEnoughLinuxOS)
 
 PKG_NAME="emulationstation"
-PKG_VERSION="e1f84b0976c7e775bdd2218db87435ea544fc322"
+PKG_VERSION="444a0b041833da2475fcd48a11c0f01ac0e1c76d"
 PKG_GIT_CLONE_BRANCH="main"
 PKG_REV="1"
 PKG_ARCH="any"
@@ -102,6 +102,9 @@ makeinstall_target() {
   # boot videos
   mkdir -p ${INSTALL}/usr/config/emulationstation/resources/bootvideos
   cp -rf ${PKG_DIR}/sources/bootvideos/* ${INSTALL}/usr/config/emulationstation/resources/bootvideos/
+
+  # copy zero.img
+  cp ${PKG_DIR}/sources/zero.img ${INSTALL}/usr/config/emulationstation/resources/
 
   mkdir -p ${INSTALL}/usr/bin
   cp ${PKG_BUILD}/es_settings ${INSTALL}/usr/bin
