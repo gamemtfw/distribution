@@ -72,7 +72,7 @@ if [ "${PARTITION_TABLE}" = "gpt" ] && [ "${BOOTLOADER}" = "u-boot" ]
 then
   echo "image: creating SPL partition(s)."
   parted -s "${DISK}" unit s mkpart ${UBOOT_LABEL} 16384 24575 >/dev/null 2>&1
-  parted -s "${DISK}" unit s mkpart ${TRUST_LABEL} 24576 32767 >/dev/null 2>&1
+  parted -s "${DISK}" unit s mkpart ${UBOOT2_LABEL} 24576 32767 >/dev/null 2>&1
 fi
 
 SYSTEM_PART_END=$(( ${SYSTEM_PART_START} + (${SYSTEM_SIZE} * 1024 * 1024 / 512) - 1 ))
@@ -109,7 +109,7 @@ sync
 dd if="${DISK}" of="${LE_TMP}/part2.ext4" bs=512 count=0 seek="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || show_error
 
 # create filesystem on part2
-echo "image: creating filesystem on part2..."
+echo "image: creating filesystem on part2..."DISK_GPT_DISK_GPT_PADDINGPADDING
 mke2fs -F -q -t ext4 -m 0 -O ^orphan_file "${LE_TMP}/part2.ext4"
 tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || show_error
 e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || show_error

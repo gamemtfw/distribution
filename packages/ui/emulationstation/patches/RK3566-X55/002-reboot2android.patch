@@ -15,7 +15,7 @@ index 0ce6cd3..000ac35 100644
  	s->addEntry(_("SHUTDOWN SYSTEM"), false, [window] {
  		window->pushGui(new GuiMsgBox(window, _("REALLY SHUTDOWN?"),
 diff --git a/es-core/src/platform.cpp b/es-core/src/platform.cpp
-index 743e091..e1dcf0b 100644
+index 743e091..1a6db04 100644
 --- a/es-core/src/platform.cpp
 +++ b/es-core/src/platform.cpp
 @@ -82,7 +82,12 @@ int quitES(QuitMode mode)
@@ -25,7 +25,7 @@ index 743e091..e1dcf0b 100644
 -
 +        case QuitMode::REBOOT_TO_ANDROID:
 +            // erase boot data and reboot
-+            runSystemCommand("dd if=/usr/config/emulationstation/resources/zero.img of=/dev/mmcblk0 bs=1024 count=16384 && sync && reboot", "", NULL);
++            runSystemCommand("dd if=/usr/config/emulationstation/resources/zero.img of=/dev/mmcblk0p1 bs=256 count=4 && sync && reboot", "", NULL);
 +            Scripting::fireEvent("quit",  "reboot");
 +            Scripting::fireEvent("reboot");
 +            break;
