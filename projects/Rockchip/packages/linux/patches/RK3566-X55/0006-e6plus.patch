@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
-index 1f3914977..4fcc71978 100755
+index 1f3914977..63c2ffcf8 100755
 --- a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
 @@ -16,13 +16,14 @@
@@ -275,7 +275,7 @@ index 1f3914977..4fcc71978 100755
  		compatible = "led,rgb13h";
  		label = "gpio-flash";
  		pinctrl-names = "default";
-@@ -171,26 +273,6 @@
+@@ -171,31 +273,22 @@
  		rockchip,camera-module-facing = "back";
  	};
  
@@ -302,7 +302,23 @@ index 1f3914977..4fcc71978 100755
  	rk817-sound {
  		compatible = "simple-audio-card";
  		simple-audio-card,format = "i2s";
-@@ -280,6 +362,32 @@
+ 		simple-audio-card,name = "rockchip,rk817-codec";
+ 		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Headphone", "Headphones",
++			"Speaker", "Speaker";
++		simple-audio-card,routing =
++			"MICL", "Mic Jack",
++			"Headphones", "HPOL",
++			"Headphones", "HPOR",
++			"Speaker", "SPKO";
++		simple-audio-card,hp-det-gpio = <&gpio2 RK_PC6 GPIO_ACTIVE_HIGH>;
++		simple-audio-card,pin-switches = "Speaker","Headphones";
+ 
+ 		simple-audio-card,cpu {
+ 			sound-dai = <&i2s1_8ch>;
+@@ -280,6 +373,32 @@
  			3300000 0x1>;
  	};
  
@@ -335,7 +351,7 @@ index 1f3914977..4fcc71978 100755
  	wireless-wlan {
  		compatible = "wlan-platdata";
  		rockchip,grf = <&grf>;
-@@ -359,14 +467,244 @@
+@@ -359,14 +478,244 @@
  
  &dsi0 {
  	status = "okay";
@@ -584,7 +600,7 @@ index 1f3914977..4fcc71978 100755
  };
  
  &dsi0_in_vp0 {
-@@ -691,25 +1029,25 @@
+@@ -691,25 +1040,25 @@
  
  		battery {
  			compatible = "rk817,battery";
@@ -622,7 +638,7 @@ index 1f3914977..4fcc71978 100755
  		};
  
  		charger {
-@@ -722,10 +1060,10 @@
+@@ -722,10 +1071,10 @@
  			chrg_finish_cur = <300>;
  			virtual_power = <0>;
  			dc_det_adc = <0>;
@@ -637,7 +653,7 @@ index 1f3914977..4fcc71978 100755
  			pinctrl-names = "default";
  			pinctrl-0 = <&charge_led_gpio>;
  			extcon = <&usb2phy0>;
-@@ -917,43 +1255,45 @@
+@@ -917,43 +1266,45 @@
  			rockchip,pins = <2 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
  		};
  	};
@@ -714,7 +730,7 @@ index 1f3914977..4fcc71978 100755
  		};
  	};
  };
-@@ -1112,13 +1452,39 @@
+@@ -1112,13 +1463,39 @@
  };
  
  &u2phy0_otg {
@@ -756,6 +772,123 @@ index 1f3914977..4fcc71978 100755
  };
  
  &combphy1_usq {
+diff --git a/drivers/headset_observe/rk_headset.c b/drivers/headset_observe/rk_headset.c
+index 5b16db723..dd22eb98c 100644
+--- a/drivers/headset_observe/rk_headset.c
++++ b/drivers/headset_observe/rk_headset.c
+@@ -41,12 +41,14 @@
+ #include <linux/earlysuspend.h>
+ #endif
+ 
+-/* Debug */
+-#if 0
+-#define DBG(x...) printk(x)
+-#else
+-#define DBG(x...) do { } while (0)
+-#endif
++static int dbg_enable=1;
++
++#define DBG(args...) \
++	do { \
++		if (dbg_enable) { \
++			pr_info(args); \
++		} \
++	} while (0)
+ 
+ #define BIT_HEADSET             BIT(0)
+ #define BIT_HEADSET_NO_MIC      BIT(1)
+@@ -86,6 +88,8 @@ struct headset_priv {
+ 	unsigned char *keycodes;
+ };
+ 
++extern int rk817_headset_detect(int);
++
+ static struct headset_priv *headset_info;
+ 
+ #ifdef CONFIG_MODEM_MIC_SWITCH
+@@ -157,12 +161,15 @@ static void headsetobserve_work(struct work_struct *work)
+ 	static unsigned int old_status = 0;
+ 
+ 	printk("---headsetobserve_work---\n");
++	DBG("%s\n", __func__);
+ 	mutex_lock(&headset_info->mutex_lock[HEADSET]);
+ 	level = read_gpio(pdata->headset_gpio);
++	DBG("%s, level1=%d\n", __func__, level);
+ 	if (level < 0)
+ 		goto out;
+ 	msleep(100);
+ 	level2 = read_gpio(pdata->headset_gpio);
++	DBG("%s, level2=%d\n", __func__, level);
+ 	if (level2 < 0)
+ 		goto out;
+ 	if (level2 != level)
+@@ -172,14 +179,17 @@ static void headsetobserve_work(struct work_struct *work)
+ 		headset_info->headset_status = level ? HEADSET_IN : HEADSET_OUT;
+ 	else
+ 		headset_info->headset_status = level ? HEADSET_OUT : HEADSET_IN;
++	
++	DBG("%s, headset_status=%d\n", __func__, headset_info->headset_status);
+ 
+ 	if (old_status == headset_info->headset_status) {
+-		pr_warn("old_status == headset_info->headset_status\n");
++		DBG("old_status == headset_info->headset_status\n");
+ 		goto out;
+ 	}
+ 	DBG("(headset in is %s)headset status is %s\n",
+ 	    pdata->headset_insert_type ? "high level" : "low level",
+ 	    headset_info->headset_status ? "in" : "out");
++	rk817_headset_detect(headset_info->headset_status);
+ 	if (headset_info->headset_status == HEADSET_IN) {
+ 		headset_info->cur_headset_status = BIT_HEADSET_NO_MIC;
+ 		if (pdata->headset_insert_type == HEADSET_IN_HIGH)
+diff --git a/drivers/headset_observe/rockchip_headset_core.c b/drivers/headset_observe/rockchip_headset_core.c
+index 3c2eeb7ac..6615a3a38 100644
+--- a/drivers/headset_observe/rockchip_headset_core.c
++++ b/drivers/headset_observe/rockchip_headset_core.c
+@@ -27,12 +27,14 @@
+ #include <linux/gpio.h>
+ #include <linux/iio/consumer.h>
+ 
+-/* Debug */
+-#if 0
+-#define DBG(x...) printk(x)
+-#else
+-#define DBG(x...) do { } while (0)
+-#endif
++static int dbg_enable=1;
++
++#define DBG(args...) \
++	do { \
++		if (dbg_enable) { \
++			pr_info(args); \
++		} \
++	} while (0)
+ 
+ static struct rk_headset_pdata *pdata_info;
+ 
+@@ -52,6 +54,7 @@ static int rockchip_headset_probe(struct platform_device *pdev)
+ 
+ 	/* headset */
+ 	ret = of_get_named_gpio_flags(node, "headset_gpio", 0, &flags);
++	DBG("%s, headset_gpio=%d\n", __func__, ret);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Can not read property headset_gpio\n");
+ 		goto err;
+@@ -136,12 +139,14 @@ static int rockchip_headset_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		pdata->headset_wakeup = 1;
+ 	if (pdata->chan) { /* hook adc mode */
++		DBG("%s, mode=adc", __func__);
+ 		dev_info(&pdev->dev, "headset have hook adc mode\n");
+ 		ret = rk_headset_adc_probe(pdev, pdata);
+ 		if (ret < 0) {
+ 			goto err;
+ 		}
+ 	} else { /* hook interrupt mode and not hook */
++		DBG("%s, mode=interrupt", __func__);
+ 		dev_info(&pdev->dev, "headset have %s mode\n",
+ 			 pdata->hook_gpio ? "interrupt hook" : "no hook");
+ 		ret = rk_headset_probe(pdev, pdata);
 diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
 index 753043d2c..c642816dd 100644
 --- a/drivers/input/joystick/Kconfig
@@ -4366,7 +4499,7 @@ index cc64c406b..82f57ea0e 100644
 +MODULE_LICENSE("GPL");
 \ No newline at end of file
 diff --git a/sound/soc/codecs/rk817_codec.c b/sound/soc/codecs/rk817_codec.c
-index a7b4feff2..c554d7e9b 100755
+index a7b4feff2..45ba6b938 100755
 --- a/sound/soc/codecs/rk817_codec.c
 +++ b/sound/soc/codecs/rk817_codec.c
 @@ -25,12 +25,17 @@
@@ -4381,7 +4514,7 @@ index a7b4feff2..c554d7e9b 100755
 -#endif
 +#define __MURMUR__
 +#define CONFIG_RK817_HEADSET
-+static int dbg_enable;
++static int dbg_enable=1;
 +module_param_named(dbg_level, dbg_enable, int, 0644);
 +
 +#define DBG(args...) \
