@@ -61,3 +61,8 @@ linaro/u-boot/
 
 # Documentation for virtuals devices
 documentation/PER_DEVICE_DOCUMENTATION/RK-ARMV8-A/
+
+# ignore non-base folder
+/distributions/
+/packages/
+/projects/
