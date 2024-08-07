@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -n ${MODEL} ]; then
+    if [ -f device_overrides/${MODEL}/private_packages ]; then
+        for pkg in `cat device_overrides/${MODEL}/private_packages`; do
+            rm -rf sources/${pkg}*
+            ./scripts/get $pkg
+        done
+    fi
+fi
+
+

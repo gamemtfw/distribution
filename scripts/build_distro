@@ -15,7 +15,13 @@ fi
 . config/options ""
 . projects/${PROJECT}/devices/${DEVICE}/options
 
-echo "Building ${DISTRO} for ${DEVICE}"
+MODELSTR=""
+if [ ! -z ${MODEL} ]; then
+  MODELSTR="-${MODEL}"
+fi
+IMGFOLDER=${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}
+
+echo "Building DISTRO=${DISTRO} DEVICE=${DEVICE} MODEL=${MODEL}"
 
 if [ "${ENABLE_32BIT}" == "true" ]
 then
@@ -101,7 +107,8 @@ fi
 
 # Clean out old builds before starting the new one.
 echo "Prune old releases: ${DISTRO}-${DEVICE}.${ARCH}-*"
-rm -f ./release/${DISTRO}-${DEVICE}.${ARCH}-*
+# rm -f ./release/${DISTRO}-${DEVICE}.${ARCH}-*
+rm -rf ./release/${IMGFOLDER}
 
 # Remove the image root as it should be regenerated for every build.
 rm -rf ./build.${DISTRO}-${DEVICE}.${ARCH}/image
@@ -122,6 +129,15 @@ case ${ARCH} in
   *)
     make image
 esac
+
+# rename built artifacts
+if [ -f ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz ]; then
+  mkdir ./release/${IMGFOLDER}
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.img.gz
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz.sha256 ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.img.gz.sha256
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar.sha256 ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar.sha256
+fi
 
 if [ ! $? == 0 ]
 then

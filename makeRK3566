@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+    ENABLE_32BIT=${ENABLE_32BIT:-true} make docker-RK3566
+else
+    MODEL=${1} tools_host/prepare_source
+    MODEL=${1} tools_host/download-private-code
+    ENABLE_32BIT=${ENABLE_32BIT:-true} make docker-RK3566-${1}
+fi

@@ -1,0 +1,38 @@
+#!/bin/bash
+DISTRO=xiaoweios
+
+# BGCOLOR='#8dd4e8'
+BGCOLOR='#908194'
+
+logo=distributions/${DISTRO}/assets/logo.png
+logo_mini=distributions/${DISTRO}/assets/logo_mini.png
+splashpath=distributions/${DISTRO}/splash
+# 1080p splash
+convert ${logo} -gravity center -background ${BGCOLOR} -extent 1920x1080 ${splashpath}/splash_1920x1080.png
+convert ${logo_mini} -gravity center -background black -extent 1920x1080 ${splashpath}/loading_1920x1080.png
+# 720p splash
+convert ${splashpath}/splash_1920x1080.png -resize 1280x720 ${splashpath}/splash_1280x720.png
+convert ${splashpath}/loading_1920x1080.png -resize 1280x720 ${splashpath}/loading_1280x720.png
+# 720x720
+convert ${logo} -resize 720x720 ${splashpath}/splash_tmp.png
+convert ${splashpath}/splash_tmp.png -gravity center -background ${BGCOLOR} -extent 720x720 ${splashpath}/splash_720x720.png
+convert ${logo_mini} -resize 720x720 ${splashpath}/loading_tmp.png
+convert ${splashpath}/loading_tmp.png -gravity center -background black -extent 720x720 ${splashpath}/loading_720x720.png
+# 854x480
+convert ${logo} -resize 480x480 ${splashpath}/splash_tmp.png
+convert ${splashpath}/splash_tmp.png -gravity center -background ${BGCOLOR} -extent 854x480 ${splashpath}/splash_854x480.png
+convert ${logo_mini} -resize 480x480 ${splashpath}/loading_tmp.png
+convert ${splashpath}/loading_tmp.png -gravity center -background black -extent 854x480 ${splashpath}/loading_854x480.png
+# 640x480
+convert ${logo} -resize 480x480 ${splashpath}/splash_tmp.png
+convert ${splashpath}/splash_tmp.png -gravity center -background ${BGCOLOR} -extent 640x480 ${splashpath}/splash_640x480.png
+convert ${logo_mini} -resize 480x480 ${splashpath}/loading_tmp.png
+convert ${splashpath}/loading_tmp.png -gravity center -background black -extent 640x480 ${splashpath}/loading_640x480.png
+# 480x320
+convert ${logo} -resize 320x320 ${splashpath}/splash_tmp.png
+convert ${splashpath}/splash_tmp.png -gravity center -background ${BGCOLOR} -extent 480x320 ${splashpath}/splash_480x320.png
+convert ${logo_mini} -resize 320x320 ${splashpath}/loading_tmp.png
+convert ${splashpath}/loading_tmp.png -gravity center -background black -extent 480x320 ${splashpath}/loading_480x320.png
+# clean up
+rm ${splashpath}/splash_tmp.png
+rm ${splashpath}/loading_tmp.png

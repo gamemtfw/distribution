@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -n ${MODEL} ]; then
+    DISTRIBUTION_OVERRIDES=device_overrides/${MODEL}/distributions/
+    PROJECT_OVERRIDES=device_overrides/${MODEL}/projects/
+    PACKAGE_OVERRIDES=device_overrides/${MODEL}/packages/
+
+    rm -rf distributions
+    cp -r distributions_base distributions
+    if [ -e ${DISTRIBUTION_OVERRIDES} ]; then
+        cp -rf ${DISTRIBUTION_OVERRIDES}/* distributions
+        echo "Override: Applied distribution overrides for ${MODEL}"
+    fi
+
+    rm -rf projects
+    cp -r projects_base projects
+    if [ -e ${PROJECT_OVERRIDES} ]; then
+        cp -rf ${PROJECT_OVERRIDES}/* projects
+        echo "Override: Applied project overrides for ${MODEL}"
+    fi
+
+    rm -rf packages
+    cp -r packages_base packages
+    if [ -e ${PACKAGE_OVERRIDES} ]; then
+        cp -rf ${PACKAGE_OVERRIDES}/* packages
+        echo "Override: Applied packages overrides for ${MODEL}"
+    fi
+fi
