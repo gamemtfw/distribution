@@ -8,25 +8,25 @@
   HARDENING_SUPPORT="no"
 
 # The name of the parent organization for updates
-  GIT_ORGANIZATION="GAMEMT"
+  GIT_ORGANIZATION="gamemtos"
 
 # The name of the github project for updates
   GIT_REPO="distribution"
 
 # Name of the Distro to build (full name, without special characters)
-  DISTRONAME="JELOS"
+  DISTRONAME="gamemtos"
 
 # short project description
   DESCRIPTION="An Open Source firmware."
 
 # Distribution Home URL
-  HOME_URL="https://www.gamemt.org"
+  HOME_URL="https://www.gamemtos.org"
 
 # Documentation URL
-  WIKI_URL="https://www.gamemt.org"
+  WIKI_URL="https://www.gamemtos.org"
 
 # Where to report bugs
-  BUG_REPORT_URL="https://www.gamemt.org"
+  BUG_REPORT_URL="https://www.gamemtos.org"
 
 # Root password to integrate in the target system
   ROOT_PASSWORD="gamemt"
@@ -175,7 +175,7 @@
   GET_HANDLER_SUPPORT="archive git file"
 
 # Partition labels for USB/SD installation media
-  DISTRO_BOOTLABEL="GAMEMT"
+  DISTRO_BOOTLABEL="GAMEMTOS"
   DISTRO_DISKLABEL="STORAGE"
 
 # Settings package name - blank if not required
