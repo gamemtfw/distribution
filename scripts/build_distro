@@ -133,10 +133,10 @@ esac
 # rename built artifacts
 if [ -f ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz ]; then
   mkdir ./release/${IMGFOLDER}
-  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.img.gz
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz        ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.img.gz
   mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.img.gz.sha256 ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.img.gz.sha256
-  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar
-  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar.sha256 ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar.sha256
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar           ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar
+  mv ./release/${DISTRO}-${DEVICE}.${ARCH}-${OS_VERSION}.tar.sha256    ./release/${IMGFOLDER}/${DISTRO}-${DEVICE}${MODELSTR}.${ARCH}-${OS_VERSION}.tar.sha256
 fi
 
 if [ ! $? == 0 ]

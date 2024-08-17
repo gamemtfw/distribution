@@ -24,7 +24,7 @@ case ${DEVICE} in
     PKG_GIT_CLONE_BRANCH="main"
   ;;
   RK3566)
-    PKG_URL="https://github.com/JustEnoughLinuxOS/rk356x-kernel.git"
+    PKG_URL="${PKG_SITE}/rk356x-kernel.git"
     PKG_VERSION="c741d56477939654bb4056be240f93d1ad1ae91e"
     GET_HANDLER_SUPPORT="git"
     PKG_GIT_CLONE_BRANCH="main"

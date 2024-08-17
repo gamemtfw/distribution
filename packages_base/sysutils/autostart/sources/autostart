@@ -87,7 +87,6 @@ log "Startup complete..."
 ### Re-source the profile so we fetch the correct UI_SERVICE variable.
 . /etc/profile
 
-sed -i 's/system.hostname=RK3566-BSP-X55/system.hostname=GAMEMT-E6-PLUS/g' /storage/.config/system/configs/system.cfg
 
 ### Lock is a prerequisite for emustation
 rm /var/lock/start.games 2>&1 >>${BOOTLOG}
