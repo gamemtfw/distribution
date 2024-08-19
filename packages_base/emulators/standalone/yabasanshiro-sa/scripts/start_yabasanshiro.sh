@@ -31,7 +31,7 @@ fi
 if [ ! -e "${CONFIG_DIR}/input.cfg" ]
 then
   rm -f ${CONFIG_DIR}/keymapv2.json
-  GAMEPAD="'$(grep -b4 js0 /proc/bus/input/devices | awk 'BEGIN {FS="\""}; /Name/ {printf $2}')'"
+  GAMEPAD="'$(grep -b4 js1 /proc/bus/input/devices | awk 'BEGIN {FS="\""}; /Name/ {printf $2}')'"
   GAMEPADCONFIG=$(xmlstarlet sel -t -c "//inputList/inputConfig[@deviceName=${GAMEPAD}]" -n /storage/.emulationstation/es_input.cfg)
 
   if [ ! -z "${GAMEPADCONFIG}" ]

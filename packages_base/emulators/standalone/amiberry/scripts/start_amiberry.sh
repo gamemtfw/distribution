@@ -34,7 +34,7 @@ fi
 cp -f /usr/config/amiberry/conf/* ${AMIBERRY_DIR}/conf
 
 find_gamepad() {
-  GAMEPAD=$(grep -b4 js0 /proc/bus/input/devices | awk 'BEGIN {FS="\""}; /Name/ {printf $2}')
+  GAMEPAD=$(grep -b4 js1 /proc/bus/input/devices | awk 'BEGIN {FS="\""}; /Name/ {printf $2}')
   sed -i "s|joyport1_friendlyname=.*|joyport1_friendlyname=${GAMEPAD}|" "${AMIBERRY_TMP_CONFIG}"
   echo "Gamepad used ${GAMEPAD}" >> "${AMIBERRY_LOG}"
 }

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ ! -e /storage/.config/.datapkgs_installed ]; then
+    /usr/bin/install_data_pkgs
+fi

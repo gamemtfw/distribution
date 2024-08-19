@@ -70,4 +70,6 @@ input_r_y_minus_axis = "-2"
 EOF
 fi
 
-
+if [ -e "/tmp/joypads/retrogame_joypad.cfg" ]; then
+    sed -i -r 's/input_enable_hotkey_btn.*/input_enable_hotkey_btn = "10"/' /tmp/joypads/retrogame_joypad.cfg
+fi

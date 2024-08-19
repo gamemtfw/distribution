@@ -1,0 +1,32 @@
+#!/bin/bash
+
+echo -e "Start installing data packages...\n"
+
+echo -e "[1/4] Installing cheat files..."
+if [ -f /usr/share/datapkgs/cheats.tar.gz ]; then
+    tar xf /usr/share/datapkgs/cheats.tar.gz --strip-components=1 -C /tmp/database/cht &>/dev/null
+fi
+echo -e "[Done]\n"
+
+echo -e "[2/4] Installing ppsspp cheat files..."
+if [ -f /usr/share/datapkgs/PSPCheats.tar.gz ]; then
+    tar xf /usr/share/datapkgs/PSPCheats.tar.gz --strip-components=1 -C /storage/.config/ppsspp/PSP/Cheats &>/dev/null
+fi
+echo -e "[Done]\n"
+
+echo -e "[3/4] Installing theme files..."
+if [ -f /usr/share/datapkgs/themes.tar.gz ]; then
+    tar xf /usr/share/datapkgs/themes.tar.gz --strip-components=1 -C /storage/.config/emulationstation/themes &>/dev/null
+fi
+echo -e "[Done]\n"
+
+echo -e "[4/4] Installing overlay files..."
+if [ -f /usr/share/datapkgs/overlay.tar.gz ]; then
+    tar xf /usr/share/datapkgs/overlay.tar.gz --strip-components=1 -C /tmp/overlays &>/dev/null
+fi
+echo -e "[Done]\n"
+
+touch /storage/.config/.datapkgs_installed
+echo -e "All data files installed"
+
+clear
