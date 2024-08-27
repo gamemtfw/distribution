@@ -1,0 +1,14 @@
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..5a39f2f
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,8 @@
++ifeq ($(DEVICE),PC)
++	CC = $(CXX)
++	SDL2_CONFIG = sdl2-config
++	START_PATH = $(PWD)
++endif
++
++rumbletest: main.cpp
++	$(CC) main.cpp $(shell $(SDL2_CONFIG) --libs) -o rumbletest
