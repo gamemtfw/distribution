@@ -1,8 +1,23 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
-index cd97f6d86..802c9460d 100755
+index cd97f6d86..d9c8754b0 100755
 --- a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
-@@ -42,10 +42,10 @@
+@@ -30,22 +30,22 @@
+ 			gpios = <&gpio4 RK_PC3 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};
+-		workled {
++		left_joystick {
+ 			gpios = <&gpio0 RK_PC2 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};		
+-		yglled {
++		workled {
+ 			gpios = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 		};
+-		ygrled {
++		right_joystick {
  			gpios = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
  			default-state = "on";
  		};
@@ -35,6 +50,22 @@ index cd97f6d86..802c9460d 100755
  
  		/* Analog mux define */
  		io-channel-names = "amux_adc";
+@@ -186,11 +192,11 @@
+ 		abs_y-p-tuning = <450>;
+ 		abs_y-n-tuning = <450>;
+ 
+-		abs_rx-p-tuning = <250>;
+-		abs_rx-n-tuning = <250>;
++		abs_rx-p-tuning = <450>;
++		abs_rx-n-tuning = <450>;
+ 
+-		abs_ry-p-tuning = <250>;
+-		abs_ry-n-tuning = <250>;
++		abs_ry-p-tuning = <450>;
++		abs_ry-n-tuning = <450>;
+ 
+ 		/* poll device interval (ms), adc read interval */
+ 		poll-interval = <10>;
 @@ -998,16 +1004,16 @@
  
  		battery {
@@ -897,3 +928,76 @@ index 9db72178d..c6ac6f612 100644
  		.of_match_table = of_match_ptr(joypad_of_match),
  	},
  };
+diff --git a/drivers/power/supply/rk817_battery.c b/drivers/power/supply/rk817_battery.c
+index b3f4ea228..ec1599e6c 100644
+--- a/drivers/power/supply/rk817_battery.c
++++ b/drivers/power/supply/rk817_battery.c
+@@ -1656,32 +1656,49 @@ static void rk817_bat_not_first_pwron(struct rk817_battery_device *battery)
+ 		ocv_vol = rk817_bat_get_ocv_voltage(battery);
+ 		ocv_soc = rk817_bat_vol_to_soc(battery, ocv_vol) * 1000;
+ 		ocv_cap = rk817_bat_vol_to_cap(battery, ocv_vol);
+-		DBG("battery->is_ocv_calib ocv_vol=%d, ocv_soc=%d, ocv_cap=%d, pre_soc=%d\n", ocv_vol, ocv_soc, ocv_cap, pre_soc);
+-		pre_cap = ocv_cap;
+-		battery->ocv_pre_dsoc = pre_soc;
+-		battery->ocv_new_dsoc = ocv_soc;
+-		if (abs(ocv_soc - pre_soc) >= battery->pdata->max_soc_offset * 1000) {
++		// Sometimes, this value is way too small
++		// It will cause 0% issue
++		// If we got a riduculus small value, skip caliboration
++		// Reduce possiblilty to get 0% when boot
++		if (ocv_cap > 3200) 
++		{
++			DBG("battery->is_ocv_calib ocv_vol=%d, ocv_soc=%d, ocv_cap=%d, pre_soc=%d\n", ocv_vol, ocv_soc, ocv_cap, pre_soc);
++			pre_cap = ocv_cap;
+ 			battery->ocv_pre_dsoc = pre_soc;
+ 			battery->ocv_new_dsoc = ocv_soc;
+-			battery->is_max_soc_offset = true;
+-			DBG("trigger max soc offset, dsoc: %d -> %d\n",
+-				 pre_soc, ocv_soc);
+-			pre_soc = ocv_soc;
++			if (abs(ocv_soc - pre_soc) >= battery->pdata->max_soc_offset * 1000) {
++				battery->ocv_pre_dsoc = pre_soc;
++				battery->ocv_new_dsoc = ocv_soc;
++				battery->is_max_soc_offset = true;
++				DBG("trigger max soc offset, dsoc: %d -> %d\n",
++					pre_soc, ocv_soc);
++				pre_soc = ocv_soc;
++			}
++			DBG("OCV calib1: cap=%d, rsoc=%d\n", ocv_cap, ocv_soc);
++		} else {
++			DBG("OCV calib1: ocv_vol = %d, which is too small, skip calib\n", ocv_vol);
+ 		}
+-		DBG("OCV calib: cap=%d, rsoc=%d\n", ocv_cap, ocv_soc);
++		
+ 	} else if (battery->pwroff_min > 0) {
+ 		ocv_vol = rk817_bat_get_ocv_voltage(battery);
+ 		ocv_soc = rk817_bat_vol_to_soc(battery, ocv_vol) * 1000;
+ 		ocv_cap = rk817_bat_vol_to_cap(battery, ocv_vol);
+-		battery->force_pre_dsoc = pre_soc;
+-		battery->force_new_dsoc = ocv_soc;
+-		DBG("battery->pwroff_min ocv_vol=%d, ocv_soc=%d, ocv_cap=%d, pre_soc=%d\n", ocv_vol, ocv_soc, ocv_cap, pre_soc);
+-		if (abs(ocv_soc - pre_soc) >= 80000) {
+-			battery->is_force_calib = true;
+-			DBG("dsoc force calib: %d -> %d\n",
+-				 pre_soc, ocv_soc);
+-			pre_soc = ocv_soc;
+-			pre_cap = ocv_cap;
++		// Similar to above.
++		if (ocv_cap > 3200)
++		{
++			battery->force_pre_dsoc = pre_soc;
++			battery->force_new_dsoc = ocv_soc;
++			DBG("battery->pwroff_min ocv_vol=%d, ocv_soc=%d, ocv_cap=%d, pre_soc=%d\n", ocv_vol, ocv_soc, ocv_cap, pre_soc);
++			if (abs(ocv_soc - pre_soc) >= 80000) {
++				battery->is_force_calib = true;
++				DBG("dsoc force calib: %d -> %d\n",
++					pre_soc, ocv_soc);
++				pre_soc = ocv_soc;
++				pre_cap = ocv_cap;
++			}
++			DBG("OCV calib2: pre_cap=%d, pre_rsoc=%d\n", pre_cap, pre_soc);
++		} else {
++			DBG("OCV calib2: ocv_vol = %d, which is too small, skip calib\n", ocv_vol);
+ 		}
+ 	}
+ finish:

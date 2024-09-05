@@ -13,6 +13,18 @@
         <image>./images/file-manager.svg</image>
     </game>
     <game>
+        <path>./joyleds_conf.sh</path>
+        <name>摇杆灯光控制</name>
+        <desc>使用该工具控制摇杆的灯光。</desc>
+        <developer>Tardigrade and GAMEMT</developer>
+        <publisher>GAMEMT</publisher>
+        <rating>5.0</rating>
+        <releasedate>2022</releasedate>
+        <genre>Tool</genre>
+        <players>1</players>
+        <image>./images/system.svg</image>
+    </game>
+    <game>
         <path>./Install GAMEMT.sh</path>
         <name>安装 GAMEMT 到设备存储</name>
         <desc>Use this utility to install GAMEMT to the local storage on your device.  Note: This process will wipe the drive that you choose to install JELOS on.</desc>

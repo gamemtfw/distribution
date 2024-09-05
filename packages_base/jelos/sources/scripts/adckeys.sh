@@ -23,9 +23,13 @@ while true; do
                 $(/usr/bin/adckeys.py start_release)
             fi
         elif [[ $line == *"KEY_VOLUMEUP"* ]]; then
-            $(/usr/bin/volume up)
+            if [[ $line == *"value 1"* ]]; then
+                $(/usr/bin/volume up)
+            fi
         elif [[ $line == *"KEY_VOLUMEDOWN"* ]]; then
-            $(/usr/bin/volume down)
+            if [[ $line == *"value 1"* ]]; then
+                $(/usr/bin/volume down)
+            fi
         fi
     done
 done
