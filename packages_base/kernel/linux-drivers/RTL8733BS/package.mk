@@ -3,10 +3,10 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="RTL8733BS"
-PKG_VERSION="cbb6f868fc860cf1fd195369edec56d7237a7832"
+PKG_VERSION="872701dd7738a81fce71509a9b8c86b54af2f80f"
 PKG_LICENSE="GPL"
-PKG_SITE="https://github.com/ohmylittlev/rtl8733bs"
-PKG_URL="https://github.com/ohmylittlev/rtl8733bs.git"
+PKG_SITE="https://github.com/modtestgmt/rtl8733bs"
+PKG_URL="https://github.com/modtestgmt/rtl8733bs.git"
 PKG_DEPENDS_TARGET="toolchain linux kernel-firmware"
 PKG_NEED_UNPACK="${LINUX_DEPENDS}"
 PKG_LONGDESC="Realtek RTL8733BS Linux driver"
