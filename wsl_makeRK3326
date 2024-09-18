@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+if [ -z $1 ]; then
+    tools_host/prepare_source
+    ENABLE_32BIT=${ENABLE_32BIT:-true} make RK3326
+else
+    MODEL=${1} tools_host/prepare_source
+    ENABLE_32BIT=${ENABLE_32BIT:-true} make RK3326-${1}
+fi
