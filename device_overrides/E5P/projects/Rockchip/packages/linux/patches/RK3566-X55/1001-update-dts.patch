@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
-index cd97f6d86..d9c8754b0 100755
+index cd97f6d86..41696980c 100755
 --- a/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3566-evb2-lp4x-v10-linux.dts
 @@ -30,22 +30,22 @@
@@ -50,19 +50,29 @@ index cd97f6d86..d9c8754b0 100755
  
  		/* Analog mux define */
  		io-channel-names = "amux_adc";
-@@ -186,11 +192,11 @@
- 		abs_y-p-tuning = <450>;
- 		abs_y-n-tuning = <450>;
+@@ -180,17 +186,17 @@
+ 		  p = positive direction, n = negative direction
+ 		  report value = (real_adc_data * tuning_value) / 100
+ 		*/
+-		abs_x-p-tuning = <450>;
+-		abs_x-n-tuning = <450>;
++		abs_x-p-tuning = <400>;
++		abs_x-n-tuning = <400>;
+ 
+-		abs_y-p-tuning = <450>;
+-		abs_y-n-tuning = <450>;
++		abs_y-p-tuning = <400>;
++		abs_y-n-tuning = <400>;
  
 -		abs_rx-p-tuning = <250>;
 -		abs_rx-n-tuning = <250>;
-+		abs_rx-p-tuning = <450>;
-+		abs_rx-n-tuning = <450>;
++		abs_rx-p-tuning = <400>;
++		abs_rx-n-tuning = <400>;
  
 -		abs_ry-p-tuning = <250>;
 -		abs_ry-n-tuning = <250>;
-+		abs_ry-p-tuning = <450>;
-+		abs_ry-n-tuning = <450>;
++		abs_ry-p-tuning = <400>;
++		abs_ry-n-tuning = <400>;
  
  		/* poll device interval (ms), adc read interval */
  		poll-interval = <10>;

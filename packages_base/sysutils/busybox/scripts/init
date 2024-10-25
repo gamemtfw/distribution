@@ -38,7 +38,7 @@ IMAGE_SYSTEM="SYSTEM"
 
 BOOT_STEP="start"
 MD5_FAILED="0"
-RUN_FSCK="yes"
+RUN_FSCK="no"
 RUN_FSCK_DISKS=""
 SYSLINUX_DEFAULT=""
 GRUB_DEFAULT=""
@@ -1223,7 +1223,6 @@ debug_msg "Unique identifier for this client: ${MACHINE_UID:-NOT AVAILABLE}"
 # main boot sequence
 for BOOT_STEP in \
     load_modules \
-    check_disks \
     mount_flash \
     set_consolefont \
     cleanup_flash \

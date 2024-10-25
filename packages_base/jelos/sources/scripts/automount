@@ -134,8 +134,8 @@ function mount_games() {
         ### Udevil shouldn't mount it this early, but just in-case.
         umount /var/media/* 2>/dev/null
 
-        log $0 "Checking filesystem ${1}."
-        fsck -Mly ${1} >/dev/null 2>&1
+        # log $0 "Checking filesystem ${1}."
+        # fsck -Mly ${1} >/dev/null 2>&1
 
         log $0 "Mounting ${1} on ${MOUNT_PATH}"
         /usr/bin/busybox mount ${1} ${MOUNT_PATH} >/dev/null 2>&1

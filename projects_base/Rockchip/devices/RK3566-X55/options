@@ -159,3 +159,5 @@
 
   # htop tool (yes / no)
     HTOP_TOOL="no"
+
+    EXCLUDE_PKGS="flycast2021-lr"
