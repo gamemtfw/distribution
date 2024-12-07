@@ -58,14 +58,12 @@ RK3566-X55:
 	MODEL=E6P DEVICE_ROOT=RK3566 PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=aarch64 ./scripts/build_distro
 
 RK3566-E6P:
-	unset DEVICE_ROOT
-	MODEL=E6P PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=arm ./scripts/build_distro
-	MODEL=E6P PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=aarch64 ./scripts/build_distro
+	MODEL=E6P DEVICE_ROOT=RK3566 PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=arm ./scripts/build_distro
+	MODEL=E6P DEVICE_ROOT=RK3566 PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=aarch64 ./scripts/build_distro
 
 RK3566-E5P:
-	unset DEVICE_ROOT
-	MODEL=E5P PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=arm ./scripts/build_distro
-	MODEL=E5P PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=aarch64 ./scripts/build_distro
+	MODEL=E5P DEVICE_ROOT=RK3566 PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=arm ./scripts/build_distro
+	MODEL=E5P DEVICE_ROOT=RK3566 PROJECT=Rockchip DEVICE=RK3566-X55 ARCH=aarch64 ./scripts/build_distro
 
 RK-ARMV8-A:
 	unset DEVICE_ROOT
