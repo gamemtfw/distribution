@@ -1,0 +1,15 @@
+diff --git a/es-app/src/views/SystemView.cpp b/es-app/src/views/SystemView.cpp
+index 3e2d08b..4e39a50 100644
+--- a/es-app/src/views/SystemView.cpp
++++ b/es-app/src/views/SystemView.cpp
+@@ -1016,8 +1016,8 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
+ 	else
+ 	{
+ 		prompts.push_back(HelpPrompt("x", _("RANDOM")));	
+-		if (SystemData::getSystem("all") != nullptr)
+-			prompts.push_back(HelpPrompt("y", _("SEARCH"))); // QUICK 
++		// if (SystemData::getSystem("all") != nullptr)
++		prompts.push_back(HelpPrompt("y", _("SEARCH"))); // QUICK 
+ 	}
+ 
+ 	// batocera
