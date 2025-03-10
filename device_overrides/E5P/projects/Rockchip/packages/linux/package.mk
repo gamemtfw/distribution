@@ -31,7 +31,7 @@ case ${DEVICE} in
   ;;
   *X55)
     PKG_URL="https://github.com/ohmylittlev/rk3566-x55-kernel.git"
-    PKG_VERSION="1773808b9c7ab594e59d3a0ed2aead03e91fd2ea"
+    PKG_VERSION="f0b69ceada9ec2461607c9bacad3d111770820ba"
     GET_HANDLER_SUPPORT="git"
     PKG_GIT_CLONE_BRANCH="e5plus"
   ;;
